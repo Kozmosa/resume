@@ -40,19 +40,13 @@
 ) = {
     block(
         inset: (left: 0pt),
-        text(weight: "bold")[#tl] + tl_comments + h(1fr) + tr +
+        text(weight: "bold", size: 11pt)[#tl] + text(font: ("Palatino", "Kaiti SC"))[#tl_comments] + h(1fr) + tr +
         linebreak() +
         if bl != "" or br != "" {
             bl + h(1fr) + br + linebreak()
         } +
         content
     )
-}
-
-#let grid_par(
-    content
-) = {
-    par(leading: 5pt)[#content]
 }
 
 // submit, post
@@ -100,10 +94,10 @@
     set list(indent: 2pt)
 
     show link: it => underline(offset: 1.8pt, it)
-    set page(margin: (x: 0.85cm, top: 1cm, bottom: 0.5cm),)
-    set par(justify: true, leading: 0.68em)
-    set text(font: fonts, size: 10.2pt)
-    set block(spacing: 1em)
+    set page(margin: (x: 0.5cm, y: 0.75cm),)
+    set par(justify: true, leading: 0.8em)
+    set text(font: fonts, size: 9.5pt)
+    set block(spacing: 0.9em)
 
     body
 }
