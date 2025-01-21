@@ -15,13 +15,11 @@
     #cventry(
         tl: [Nanjing University],
         tr: [2023.09 - 2026.06 (expected)],
-        bl: [Master's Degree in #emph[Computer Science and Technology] | #link("https://pascal-lab.net")[Pascal Lab]. Tutor: #redact(mark: true)[Place] Li | Focus on PL, program analysis and HDL],
-    )[]
+    )[Master's Degree in #emph[Computer Science and Technology] | #link("https://pascal-lab.net")[Pascal Lab]. Tutor: #redact(mark: true)[Place] Li | Focus on PL, program analysis and HDL]
     #cventry(
         tl: [Beihang University],
         tr: [2019.09 - 2023.06],
-        bl: [Bachelor’s Degree in #emph[Computer Science and Technology] | GPA 3.84/4.00],
-    )[]
+    )[Bachelor’s Degree in #emph[Computer Science and Technology] | GPA 3.84/4.00]
 
   == Work Experience
 
