@@ -105,7 +105,8 @@ jobs:
         run: |
           gh release upload \
             "v${{ needs.build.outputs.version }}" \
-            resume-latest.pdf \
+            resume-cn-submit.pdf \
+            resume-en-submit.pdf \
             --clobber \
             --repo $GITHUB_REPOSITORY
         env:
