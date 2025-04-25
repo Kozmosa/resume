@@ -69,7 +69,7 @@
 
 #let chicv(body) = {
     let fonts = (
-        "Palatino",
+        "DejaVu Sans",
         "Source Han Serif SC",
     )
     show heading.where(

@@ -1,0 +1,113 @@
+name: Build Resume (Snap Install)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request: {}
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  releases: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Fonts
+        run: |
+          mkdir -p ~/.fonts
+          cp ./otfs/*.otf ~/.fonts/
+
+      - name: Setup Snap core
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y snapd
+          sudo snap install core
+
+      - name: Install Typst via Snap
+        run: |
+          sudo snap install typst --classic
+          sudo ln -s /snap/bin/typst /usr/local/bin/typst  # 确保全局可用
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get install -y \
+              fonts-noto-cjk \
+              fonts-wqy-microhei \
+              fonts-wqy-zenhei \
+              libfontconfig1
+          sudo fc-cache -fv
+
+      - name: Cache fonts
+        uses: actions/cache@v3
+        with:
+          path: |
+            /usr/share/fonts
+            /etc/fonts
+          key: ${{ runner.os }}-fonts-${{ hashFiles('resume.typ') }}
+
+      - name: Generate build version
+        id: version
+        run: |
+          echo "version=$(date +'%Y.%m.%d-%H%M%S')" >> $GITHUB_OUTPUT
+          echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build Resume PDF
+        run: |
+          make cn
+          make en
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-build
+          path: |
+            resume-*.pdf
+            !resume-latest.pdf
+
+      - name: Upload PR preview
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-preview
+          path: resume-latest.pdf
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: resume-build
+          path: dist
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.build.outputs.version }}
+          name: "Resume v${{ needs.build.outputs.version }}"
+          files: |
+            dist/resume-*.pdf
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy latest version
+        run: |
+          gh release upload \
+            "v${{ needs.build.outputs.version }}" \
+            resume-latest.pdf \
+            --clobber \
+            --repo $GITHUB_REPOSITORY
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
