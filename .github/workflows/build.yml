@@ -1,9 +1,16 @@
-name: Build Resume (Snap Install)
+name: Build Typst Resume
 
 on:
+  # 核心配置：监听所有分支的 push 事件
   push:
-    branches: [ "main" ]
-  pull_request: {}
+    branches-ignore: []  # 空数组表示不忽略任何分支
+    tags-ignore: ["**"]  # 忽略所有 tag
+
+  # 可选配置：PR 相关触发
+  pull_request:
+    branches: [ "**" ]   # 监听所有 PR 的更新
+
+  # 保留手动触发能力
   workflow_dispatch:
 
 permissions:
