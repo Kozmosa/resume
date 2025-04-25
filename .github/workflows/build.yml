@@ -100,14 +100,3 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deploy latest version
-        run: |
-          gh release upload \
-            "v${{ needs.build.outputs.version }}" \
-            resume-cn-submit.pdf \
-            resume-en-submit.pdf \
-            --clobber \
-            --repo $GITHUB_REPOSITORY
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
